@@ -565,6 +565,38 @@ TEST_P(ColumnFamilyTest, DontReuseColumnFamilyID) {
   }
 }
 
+static std::string Key(int i) {
+  char buf[100];
+  snprintf(buf, sizeof(buf), "key%06d", i);
+  return std::string(buf);
+}
+
+#ifndef ROCKSDB_LITE
+TEST_F(ColumnFamilyTest, TestWriteCrash) {
+  const int kNumKeysPerFile = 2;
+  SpecialEnv env(Env::Default());
+  db_options_.env = &env;
+  db_options_.max_background_jobs = 64; // Enough threads
+  column_family_options_.memtable_factory.reset(new SpecialSkipListFactory(kNumKeysPerFile));
+  Open();
+  CreateColumnFamilies({"1", "2", "3"});
+
+  for (int num = 0; num < 1000; num++) {
+    for (int cf = 0; cf < 4; cf++) {    
+      for (int i = 0; i < kNumKeysPerFile; i++) {
+        ASSERT_OK(Put(cf, Key(i), ""));
+      }
+      // put extra key to trigger flush
+      //ASSERT_OK(Put(cf, "", ""));
+    }
+    printf("%d ", num);
+  }
+
+  db_options_.env = env_;
+  Close();
+}
+#endif  // !ROCKSDB_LITE
+
 #ifndef ROCKSDB_LITE
 TEST_P(ColumnFamilyTest, CreateCFRaceWithGetAggProperty) {
   Open();
