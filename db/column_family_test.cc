@@ -572,7 +572,7 @@ static std::string Key(int i) {
 }
 
 #ifndef ROCKSDB_LITE
-TEST_F(ColumnFamilyTest, TestWriteCrash) {
+TEST_P(ColumnFamilyTest, TestWriteCrash) {
   const int kNumKeysPerFile = 2;
   SpecialEnv env(Env::Default());
   db_options_.env = &env;
