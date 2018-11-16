@@ -35,15 +35,11 @@ class ConcurrentTaskLimiter {
 // Create a ConcurrentTaskLimiter that can be shared with mulitple CFs
 // across RocksDB instances to control concurrent tasks.
 //
-// @param env: Pointer to Env object, please see "rocksdb/env.h".
-// @param info_log: If not nullptr, info_log will be used to log errors.
-//
 // @param name: Name of the limiter.
 // @param limit: max concurrent tasks. 
 //        limit = 0 means no new task allowed.
 //        limit < 0 means no limitation.
 extern ConcurrentTaskLimiter* NewConcurrentTaskLimiter(
-    Env* env, std::shared_ptr<Logger> info_log = nullptr,
     const std::string& name = "", int32_t limit = -1);
 
 }  // namespace rocksdb

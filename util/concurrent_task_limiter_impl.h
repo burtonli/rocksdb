@@ -17,8 +17,7 @@ namespace rocksdb {
 
 class ConcurrentTaskLimiterImpl : public ConcurrentTaskLimiter {
  public:
-  explicit ConcurrentTaskLimiterImpl(Env* env, std::shared_ptr<Logger> logger,
-                                     const std::string& name,
+  explicit ConcurrentTaskLimiterImpl(const std::string& name,
                                      int32_t max_outstanding_task);
 
   // No copying allowed
@@ -41,10 +40,7 @@ class ConcurrentTaskLimiterImpl : public ConcurrentTaskLimiter {
   virtual void ReturnToken(int32_t& tasks) override;
 
  private:
-  Env* env_;
-  std::shared_ptr<Logger> logger_;
   std::string name_;
-
   std::atomic<int32_t> max_outstanding_tasks_;
   std::atomic<int32_t> outstanding_tasks_;  
 };

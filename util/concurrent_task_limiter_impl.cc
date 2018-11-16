@@ -13,11 +13,8 @@
 namespace rocksdb {
 
 ConcurrentTaskLimiterImpl::ConcurrentTaskLimiterImpl(
-    Env* env, std::shared_ptr<Logger> logger,
     const std::string& name, int32_t max_outstanding_task) 
-    : env_(env),
-      logger_(logger),
-      name_(name),
+    : name_(name),
       max_outstanding_tasks_(max_outstanding_task),
       outstanding_tasks_(0) {
 
@@ -62,9 +59,8 @@ void ConcurrentTaskLimiterImpl::ReturnToken(int32_t& tasks) {
 }
 
 ConcurrentTaskLimiter* NewConcurrentTaskLimiter(
-    Env* env, std::shared_ptr<Logger> info_log,
     const std::string& name, int32_t limit) {
-  return new ConcurrentTaskLimiterImpl(env, info_log, name, limit);
+  return new ConcurrentTaskLimiterImpl(name, limit);
 }
 
 }  // namespace rocksdb
