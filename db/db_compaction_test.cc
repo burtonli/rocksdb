@@ -3910,12 +3910,11 @@ TEST_F(DBCompactionTest, CompactionLimiter) {
   limiter_settings.push_back({"limiter_3", 3, 0, 0, nullptr});
 
   for (auto& ls : limiter_settings) {
-    ls.limiter.reset(NewConcurrentTaskLimiter(env_, nullptr, 
-      ls.name, ls.limit_tasks));
+    ls.limiter.reset(NewConcurrentTaskLimiter(ls.name, ls.limit_tasks));
   }
 
   std::shared_ptr<ConcurrentTaskLimiter> unique_limiter(
-    NewConcurrentTaskLimiter(env_, nullptr, "unique_limiter", -1));
+    NewConcurrentTaskLimiter("unique_limiter", -1));
 
   const char* cf_names[] = {"default", "0", "1", "2", "3", "4", "5",
     "6", "7", "8", "9", "a", "b", "c", "d", "e", "f" };
